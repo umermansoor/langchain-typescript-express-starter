@@ -1,0 +1,19 @@
+tags:
+- name: chatbot
+  description: codeahoy chatbot
+
+paths:
+  /chatbot/status:
+    get:
+      tags:
+      - chatbot
+      summary: Get Chatbot status
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'    
+
+schemes:
+ - https
+ - http
