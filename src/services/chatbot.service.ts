@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { HttpException } from '@exceptions/httpException';
+import { HttpException } from '@/exceptions/HttpException';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { CallbackManager } from 'langchain/callbacks';
 import {
@@ -49,15 +49,4 @@ export class ChatBotService {
     await chat.call(messages);
   }
 
-  public async storyTellerChat(message: string) : Promise<string> {
-    const chat = new ChatOpenAI({ temperature: 0.7 });
-    const res = await chat.call([
-      new SystemChatMessage(StoryTellerPrompt),
-      new HumanChatMessage(message),
-    ]);
-
-    console.log(res);
-
-    return res.text; 
-  }
 }
