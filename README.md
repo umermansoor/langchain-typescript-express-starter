@@ -1,8 +1,29 @@
 # Node-Express-LangChain-TypeScript Boilerplate
 
 ## How to run
-1. Define an environment variable `OPENAI_API_KEY` with your API key e.g.`export OPENAI_API_KEY=...`
-2. `npm run dev`
+
+### 1. Define environment variables
+
+You'll need to define the following environment variables in order for the app to work. You can place these in files called `.env.development.local`, `.env.test.local`, `.env.production.local` under the root folder.
+
+```
+# PORT
+PORT = 3000
+
+# LOG
+LOG_FORMAT = dev
+LOG_DIR = ../logs
+
+# CORS
+ORIGIN = *
+CREDENTIALS = true
+
+# OpenAI 
+OPENAI_API_KEY = <<YOUR_OPEN_AI_API_KEY_GOES_HERE>>
+```
+
+### 2. Run the app
+Launch the app using: `npm run dev`
 
 ## How to test
 

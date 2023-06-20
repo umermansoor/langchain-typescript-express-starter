@@ -25,6 +25,7 @@
     "dotenv": "^16.0.1",
     "endent": "^2.1.0",
     "envalid": "^7.3.1",
+    "eventsource-parser": "^1.0.0",
     "express": "^4.18.2",
     "helmet": "^5.1.1",
     "hpp": "^0.2.3",

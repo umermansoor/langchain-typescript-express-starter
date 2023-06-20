@@ -1,5 +1,4 @@
 import { Service } from 'typedi';
-import { HttpException } from '@/exceptions/HttpException';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { CallbackManager } from 'langchain/callbacks';
 import {
@@ -7,35 +6,20 @@ import {
   HumanMessagePromptTemplate,
   SystemMessagePromptTemplate,
 } from 'langchain/prompts';
-import { TravelGuidePromptTemplate, StoryTellerPrompt } from '@/prompts/chatbot.prompt';
+import { TravelGuidePromptTemplate } from '@/prompts/chatbot.prompt';
 import { Response } from 'express';
-import { HumanChatMessage, SystemChatMessage } from 'langchain/schema';
-
+import { LangChainStream } from '@/streams/langchain.stream';
 
 
 @Service()
 export class ChatBotService {
 
-  // TODO Return stream and handle in controller
-  public async travelAgentChatStream(message: string, res: Response): Promise<void> {
-    const chat = new ChatOpenAI({
+  public async travelAgentChatStream(message: string, res: Response): Promise<ReadableStream<Uint8Array>> {
+    const { stream, handlers } = LangChainStream()
+    const llm = new ChatOpenAI({
       streaming: true,
-      callbackManager: CallbackManager.fromHandlers({
-        handleLLMNewToken: async token => {
-          res.write(`${token}`);
-        },
-
-        handleLLMEnd: async () => {
-          console.log(`END`);
-          res.send();
-
-        },
-        handleLLMError: async e => {
-          console.log(`ERR`);
-          res.status(500).send('Something went wrong: ' + e);
-        },
-      }),
-    });
+      callbackManager: CallbackManager.fromHandlers(handlers)
+    })
 
     const chatPrompt = ChatPromptTemplate.fromPromptMessages([
       SystemMessagePromptTemplate.fromTemplate(TravelGuidePromptTemplate),
@@ -46,7 +30,13 @@ export class ChatBotService {
       name: 'T-100',
     });
     const messages = formattedPrompt.toChatMessages();
-    await chat.call(messages);
+
+    llm
+    .call(messages)
+      // eslint-disable-next-line no-console
+    .catch(console.error)
+
+    return stream
   }
 
 }
