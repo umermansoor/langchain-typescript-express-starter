@@ -29,7 +29,7 @@ Launch the app using: `npm run dev`
 
 ### Streaming chat endpoint
 ```
-curl -N --location --request POST 'http://localhost:3000/chatbot/chat' \
+curl --location --request POST 'http://localhost:3000/v1/conversations/travel-agent' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "message": "I'm in Gilroy, California"
