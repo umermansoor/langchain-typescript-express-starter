@@ -3,7 +3,7 @@ import { ChatBotController } from '@/controllers/chatbot.controller';
 import { Routes } from '@interfaces/routes.interface';
 
 export class ChatBotRoute implements Routes {
-  public path = '/v1';
+  public path = '/v1/conversations';
   public router = Router();
   public chatbot = new ChatBotController();
 
@@ -13,6 +13,6 @@ export class ChatBotRoute implements Routes {
 
   private initializeRoutes() {
     this.router.get(`${this.path}/status`, this.chatbot.status);
-    this.router.post(`${this.path}/conversations`, this.chatbot.travelAgentChat);
+    this.router.post(`${this.path}/travel-agent`, this.chatbot.travelAgentChat);
   }
 }

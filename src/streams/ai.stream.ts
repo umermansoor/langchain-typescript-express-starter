@@ -1,38 +1,55 @@
-
 export interface AIStreamCallbacks {
-  onStart?: () => Promise<void>
-  onCompletion?: (completion: string) => Promise<void>
-  onToken?: (token: string) => Promise<void>
+  onStart?: () => Promise<void>;
+  onCompletion?: (completion: string) => Promise<void>;
+  onToken?: (token: string) => Promise<void>;
 }
 
 /**
- * This stream forks input stream, allowing us to use the result as a
- * bytestream of the messages and pass the messages to our callback interface.
+ * This function creates a TransformStream that allows transforming incoming
+ * string messages into Uint8Array chunks and invoking optional callbacks during
+ * the lifecycle of the stream processing.
+ *
+ * @param callbacks - An object containing optional onStart, onToken, and onCompletion callbacks.
  */
-export function createCallbacksTransformer(
-  callbacks: AIStreamCallbacks | undefined
-) {
-  const encoder = new TextEncoder()
-  let fullResponse = ''
+export function createCallbacksTransformer(callbacks: AIStreamCallbacks | undefined) {
+  const encoder = new TextEncoder();
+  let fullResponse = '';
 
-  const { onStart, onToken, onCompletion } = callbacks || {}
+  const { onStart, onToken, onCompletion } = callbacks || {};
 
   return new TransformStream<string, Uint8Array>({
     async start(): Promise<void> {
-      if (onStart) await onStart()
+      if (onStart) {
+        try {
+          await onStart();
+        } catch (error) {
+          console.error('Error in onStart callback', error);
+        }
+      }
     },
 
     async transform(message, controller): Promise<void> {
-      controller.enqueue(encoder.encode(message))
+      controller.enqueue(encoder.encode(message));
 
-      if (onToken) await onToken(message)
-      if (onCompletion) fullResponse += message
+      if (onToken) {
+        try {
+          await onToken(message);
+        } catch (error) {
+          console.error('Error in onToken callback', error);
+        }
+      }
+
+      if (onCompletion) fullResponse += message;
     },
 
     async flush(): Promise<void> {
-      await onCompletion?.(fullResponse)
-    }
-  })
+      if (onCompletion) {
+        try {
+          await onCompletion?.(fullResponse);
+        } catch (error) {
+          console.error('Error in onCompletion callback', error);
+        }
+      }
+    },
+  });
 }
-
-

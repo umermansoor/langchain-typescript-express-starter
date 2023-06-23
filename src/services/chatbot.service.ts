@@ -1,25 +1,18 @@
 import { Service } from 'typedi';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { CallbackManager } from 'langchain/callbacks';
-import {
-  ChatPromptTemplate,
-  HumanMessagePromptTemplate,
-  SystemMessagePromptTemplate,
-} from 'langchain/prompts';
+import { ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate } from 'langchain/prompts';
 import { TravelGuidePromptTemplate } from '@/prompts/chatbot.prompt';
-import { Response } from 'express';
 import { LangChainStream } from '@/streams/langchain.stream';
-
 
 @Service()
 export class ChatBotService {
-
-  public async travelAgentChatStream(message: string, res: Response): Promise<ReadableStream<Uint8Array>> {
-    const { stream, handlers } = LangChainStream()
+  public async travelAgentChat(message: string): Promise<ReadableStream<Uint8Array>> {
+    const { stream, handlers } = LangChainStream();
     const llm = new ChatOpenAI({
       streaming: true,
-      callbackManager: CallbackManager.fromHandlers(handlers)
-    })
+      callbackManager: CallbackManager.fromHandlers(handlers),
+    });
 
     const chatPrompt = ChatPromptTemplate.fromPromptMessages([
       SystemMessagePromptTemplate.fromTemplate(TravelGuidePromptTemplate),
@@ -32,11 +25,10 @@ export class ChatBotService {
     const messages = formattedPrompt.toChatMessages();
 
     llm
-    .call(messages)
+      .call(messages)
       // eslint-disable-next-line no-console
-    .catch(console.error)
+      .catch(console.error);
 
-    return stream
+    return stream;
   }
-
 }

@@ -81,7 +81,7 @@ export class App {
   }
 
   private initializeProcessHandlers() {
-    process.on('uncaughtException', (err) => {
+    process.on('uncaughtException', err => {
       console.error('There was an uncaught error', err);
       process.exit(1); //mandatory (according to the Node.js docs)
     });
@@ -90,6 +90,4 @@ export class App {
       console.error('Unhandled Rejection at:', promise, 'reason:', reason);
     });
   }
-
-  
 }

@@ -1,4 +1,3 @@
 export interface AIStreamParser {
-    (data: string): string | void
-  }
-  
+  (data: string): string | void;
+}

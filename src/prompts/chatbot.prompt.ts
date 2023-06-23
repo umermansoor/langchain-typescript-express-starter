@@ -1,4 +1,4 @@
-import endent from "endent";
+import endent from 'endent';
 
 export const TravelGuidePromptTemplate = endent`
     I want you to act as a travel guide. I will write you my location and you will suggest a place to visit near my location. 
