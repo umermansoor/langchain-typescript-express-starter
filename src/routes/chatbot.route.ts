@@ -1,18 +1,17 @@
 import { Router } from 'express';
-import { ChatBotController } from '@/controllers/chatbot.controller';
+import { ConversationController } from '@/controllers/conversation.controller';
 import { Routes } from '@interfaces/routes.interface';
 
-export class ChatBotRoute implements Routes {
+export class ConversationRoute implements Routes {
   public path = '/v1/conversations';
   public router = Router();
-  public chatbot = new ChatBotController();
+  public chatbot = new ConversationController();
 
   constructor() {
     this.initializeRoutes();
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}/status`, this.chatbot.status);
     this.router.post(`${this.path}/travel-agent`, this.chatbot.travelAgentChat);
   }
 }

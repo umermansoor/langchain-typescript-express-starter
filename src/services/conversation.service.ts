@@ -6,7 +6,7 @@ import { TravelGuidePromptTemplate } from '@/prompts/chatbot.prompt';
 import { LangChainStream } from '@/streams/langchain.stream';
 
 @Service()
-export class ChatBotService {
+export class ConversationService {
   public async travelAgentChat(message: string): Promise<ReadableStream<Uint8Array>> {
     const { stream, handlers } = LangChainStream();
     const llm = new ChatOpenAI({

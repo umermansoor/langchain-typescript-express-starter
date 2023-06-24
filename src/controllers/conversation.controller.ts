@@ -1,20 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
-import { ChatBotService } from '@/services/chatbot.service';
+import { ConversationService as ConversationService } from '@/services/conversation.service';
 import { ConversationRequest } from '@/interfaces/conversation.interface';
 import { HttpException } from '@/exceptions/HttpException';
 import { streamToResponse } from '@/streams/utils.stream';
 
-export class ChatBotController {
-  private chatBotService = Container.get(ChatBotService);
-
-  public status = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      res.status(200).json({ message: 'OK' });
-    } catch (error) {
-      next(error);
-    }
-  };
+export class ConversationController {
+  private chatBotService = Container.get(ConversationService);
 
   public travelAgentChat = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
