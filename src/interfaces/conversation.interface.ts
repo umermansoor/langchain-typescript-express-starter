@@ -1,16 +1,33 @@
+import { IsString, IsInt, Min, ArrayMinSize, IsArray, IsEnum, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+
 enum Role {
   system = 'system',
   user = 'user',
 }
 
-export interface ConversationRequest {
-  conversationId: string;
-  timezoneOffset: number;
-  messages: Message[];
+class Message {
+  @IsString()
+  id: string;
+
+  @IsString()
+  text: string;
+
+  @IsEnum(Role)
+  role: Role;
 }
 
-export interface Message {
-  id: string;
-  text: string;
-  role: Role;
+export class ConversationRequest {
+  @IsString()
+  conversationId: string;
+
+  @IsInt()
+  @Min(0)
+  timezoneOffset: number;
+
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => Message)
+  messages: Message[];
 }

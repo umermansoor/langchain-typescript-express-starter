@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { App } from '@/app';
-import { ConversationRoute } from '@/routes/chatbot.route';
+import { ConversationRoute } from '@/routes/conversation.route';
 
 afterAll(async () => {
   await new Promise<void>(resolve => setTimeout(() => resolve(), 500));

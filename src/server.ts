@@ -1,5 +1,5 @@
 import { App } from '@/app';
-import { ConversationRoute } from '@/routes/chatbot.route';
+import { ConversationRoute } from '@/routes/conversation.route';
 import { ValidateEnv } from '@utils/validateEnv';
 
 ValidateEnv();
