@@ -9,7 +9,6 @@ export function LangChainStream(callbacks?: AIStreamCallbacks) {
     handlers: {
       handleLLMNewToken: async (token: string) => {
         await writer.ready;
-        console.log('LLM token', token);
         await writer.write(token);
       },
       handleLLMEnd: async () => {

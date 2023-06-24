@@ -23,11 +23,13 @@ OPENAI_API_KEY = <<YOUR_OPEN_AI_API_KEY_GOES_HERE>>
 ```
 
 ### 2. Run the app
-Launch the app using: `npm run dev`
+- Launch the app in development mode using: `npm run deploy:dev` (or `npm run dev`)
+- Run `pm2 logs` to watch the logs
+- `pm2 kill`
 
 ## How to test
 
-### Streaming chat endpoint
+### curl
 ```
 curl --location --request POST 'http://localhost:3000/v1/conversations/travel-agent' \
 --header 'Content-Type: application/json' \
@@ -35,3 +37,10 @@ curl --location --request POST 'http://localhost:3000/v1/conversations/travel-ag
     "message": "I'm in Gilroy, California"
 }'
 ```
+
+### REST Client (VS Code)
+
+[REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) allows you to send HTTP request and view the response in Visual Studio Code directly.
+
+Modify `conversation.http` file in src/http folder to your source code.
+

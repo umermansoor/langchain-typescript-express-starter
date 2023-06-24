@@ -1,0 +1,17 @@
+# baseURL
+@baseURL = http://localhost:3000
+
+###
+# Travel agent
+POST {{ baseURL }}/v1/conversations/travel-agent
+Content-Type: application/json
+
+{
+    "conversationId": "67357705-7502-4f9e-819a-7656eabff3f5",
+    "messages": [
+        {
+            "id": "67357705-7502-4f9e-819a-7656eabff3a6",
+            "text": "I am in Gilroy, California."
+        }
+    ]
+}
