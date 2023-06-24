@@ -29,12 +29,19 @@ OPENAI_API_KEY = <<YOUR_OPEN_AI_API_KEY_GOES_HERE>>
 
 ## How to test
 
-### curl
+### Event Stream with curl
 ```
-curl --location --request POST 'http://localhost:3000/v1/conversations/travel-agent' \
+curl --location 'http://localhost:3000/v1/conversations/travel-agent' \
+--header 'Accept: text/event-stream' \
 --header 'Content-Type: application/json' \
---data-raw '{
-    "message": "I'm in Gilroy, California"
+--data '{
+    "conversationId": "67357705-7502-4f9e-819a-7656eabff3f5",
+    "messages": [
+        {
+            "id": "67357705-7502-4f9e-819a-7656eabff3a6",
+            "text": "I am in Gilroy, California."
+        }
+    ]
 }'
 ```
 

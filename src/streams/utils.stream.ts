@@ -19,3 +19,14 @@ export function streamToResponse(res: ReadableStream, response: Response) {
   }
   read();
 }
+
+export async function streamToString(stream) {
+  // lets have a ReadableStream as a stream variable
+  const chunks = [];
+
+  for await (const chunk of stream) {
+    chunks.push(Buffer.from(chunk));
+  }
+
+  return Buffer.concat(chunks).toString('utf-8');
+}

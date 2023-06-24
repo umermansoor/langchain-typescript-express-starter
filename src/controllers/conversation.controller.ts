@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
-import { ConversationService as ConversationService } from '@/services/conversation.service';
+import { ConversationService } from '@/services/conversation.service';
 import { ConversationRequest } from '@/interfaces/conversation.interface';
-import { HttpException } from '@/exceptions/HttpException';
-import { streamToResponse } from '@/streams/utils.stream';
+import { HttpException } from '@/exceptions/http.exception';
+import { streamToResponse, streamToString } from '@/streams/utils.stream';
 
 export class ConversationController {
   private chatBotService = Container.get(ConversationService);
@@ -13,11 +13,18 @@ export class ConversationController {
       const chatRequest: ConversationRequest = req.body;
       if (!this.validateChatRequest(chatRequest)) {
         next(new HttpException(400, 'Invalid chat request'));
+        return;
       }
 
       const stream = await this.chatBotService.travelAgentChat(chatRequest.messages[0].text);
 
-      streamToResponse(stream, res);
+      const accept = req.headers.accept || '';
+      if (accept.includes('text/event-stream')) {
+        streamToResponse(stream, res);
+      } else {
+        const response = await streamToString(stream);
+        res.send(response);
+      }
     } catch (error) {
       next(error);
     }

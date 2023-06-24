@@ -1,3 +1,7 @@
+enum Role {
+  system = 'system',
+  user = 'user',
+}
 
 export interface ConversationRequest {
   conversationId: string;
@@ -6,7 +10,7 @@ export interface ConversationRequest {
 }
 
 export interface Message {
-   id: string;
-   text: string;
+  id: string;
+  text: string;
+  role: Role;
 }
-
