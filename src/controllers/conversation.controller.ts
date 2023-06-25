@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { ConversationService } from '@/services/conversation.service';
-import { ConversationRequest } from '@/interfaces/conversation.interface';
+import { ConversationRequest } from '@/dtos/conversation.dto';
 import { HttpException } from '@/exceptions/http.exception';
 import { streamToResponse, streamToString } from '@/streams/utils.stream';
 import { validate } from 'class-validator';
@@ -12,13 +12,11 @@ export class ConversationController {
 
   public travelAgentChat = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const chatRequest: ConversationRequest = plainToClass(ConversationRequest, req.body);
-
-  
+      const chatRequest = req.body as ConversationRequest;
 
       const stream = await this.chatBotService.travelAgentChat(chatRequest.messages[0].text);
 
-      const accept = req.headers.accept || '';
+      const { accept } = req.headers;
       if (accept.includes('text/event-stream')) {
         streamToResponse(stream, res);
       } else {

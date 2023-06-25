@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { ConversationController } from '@/controllers/conversation.controller';
 import { Routes } from '@interfaces/routes.interface';
 import { ValidationMiddleware } from '@/middlewares/validation.middleware';
-import { ConversationRequest } from '@/interfaces/conversation.interface';
+import { ConversationRequest } from '@/dtos/conversation.dto';
 
 export class ConversationRoute implements Routes {
   public path = '/v1/conversations';
