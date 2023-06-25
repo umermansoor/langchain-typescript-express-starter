@@ -7,8 +7,10 @@ export const ErrorMiddleware = (error: HttpException, req: Request, res: Respons
     const status: number = error.status || 500;
     const message: string = error.message || 'Something went wrong';
 
+    logger.error(`[${req.method}] ${req.path} >> StatusCode:: ${status}, Message:: ${message}`);
+
     //Print the error stack
-    logger.log('error', error.stack);
+    logger.error('error', error.stack);
 
     res.status(status).json({ message });
   } catch (error) {

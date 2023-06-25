@@ -1,4 +1,7 @@
-# Node-Express-LangChain-TypeScript Boilerplate
+# Gen AI Chatbot written in TypeScript / LangChain
+
+## Pre-requisites 
+- Redis server must be running to store sessions
 
 ## How to run
 
@@ -29,20 +32,39 @@ OPENAI_API_KEY = <<YOUR_OPEN_AI_API_KEY_GOES_HERE>>
 
 ## How to test
 
-### Event Stream with curl
+### 1. Create a new conversation
+
+Save the unique id in the response body
+
 ```
-curl --location 'http://localhost:3000/v1/conversations/travel-agent' \
---header 'Accept: text/event-stream' \
+curl --location --request POST 'http://localhost:3000/v1/conversations' \
+--data ''
+```
+
+### 2. Send chat messages in the conversation
+
+Use the id to add messages to the conversation
+
+```
+curl --location 'http://localhost:3000/v1/conversations/1ef78d70-a80d-4327-ae33-2c239a815e83/messages' \
 --header 'Content-Type: application/json' \
 --data '{
-    "conversationId": "67357705-7502-4f9e-819a-7656eabff3f5",
+    "id": "67357705-7502-4f9e-819a-7656eabff3f5",
+    "timezoneOffset": 45,
     "messages": [
         {
             "id": "67357705-7502-4f9e-819a-7656eabff3a6",
-            "text": "I am in Gilroy, California."
+            "text": "give me some recommendations for alameda,ca",
+            "role": "user"
         }
     ]
 }'
+```
+
+### 3. Get all messages in the conversation
+
+```
+curl --location 'http://localhost:3000/v1/conversations/1ef78d70-a80d-4327-ae33-2c239a815e83'
 ```
 
 ### REST Client (VS Code)

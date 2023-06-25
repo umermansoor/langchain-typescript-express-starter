@@ -12,6 +12,10 @@ import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config';
 import { Routes } from '@interfaces/routes.interface';
 import { ErrorMiddleware } from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
+import Container from 'typedi';
+import { Redis } from 'ioredis';
+
+Container.set(Redis, new Redis());
 
 export class App {
   public app: express.Application;
