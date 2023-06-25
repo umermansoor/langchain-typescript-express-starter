@@ -2,10 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { ConversationService } from '@/services/conversation.service';
 import { ConversationRequest } from '@/dtos/conversation.dto';
-import { HttpException } from '@/exceptions/http.exception';
 import { streamToResponse, streamToString } from '@/streams/utils.stream';
 import { validate } from 'class-validator';
-import { plainToClass } from 'class-transformer';
 
 export class ConversationController {
   private chatBotService = Container.get(ConversationService);
@@ -26,14 +24,5 @@ export class ConversationController {
     } catch (error) {
       next(error);
     }
-  };
-
-  private validateChatRequest = async (chatRequest: ConversationRequest): Promise<boolean> => {
-    const errors = await validate(chatRequest);
-    if (errors.length > 0) {
-      console.log('Validation failed. errors: ', errors);
-      return false;
-    }
-    return true;
   };
 }
