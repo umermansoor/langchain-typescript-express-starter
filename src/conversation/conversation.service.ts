@@ -9,6 +9,8 @@ import { BufferMemory } from 'langchain/memory';
 import { Conversation, Message } from '@/conversation/conversation.model';
 import { v4 as uuidv4 } from 'uuid';
 import { ConversationRepository } from '@/conversation/conversation.repository';
+import { ChainValues } from 'langchain/dist/schema';
+import { logger } from '@utils/logger';
 
 @Service()
 export class ConversationService {
@@ -36,7 +38,7 @@ export class ConversationService {
     return conversation;
   }
 
-  public async handleNewMessage(sessionId: string, message: string): Promise<ReadableStream<Uint8Array>> {
+  public async handleNewMessage(sessionId: string, message: string, messageId: string): Promise<ReadableStream<Uint8Array>> {
     const { stream, handlers } = LangChainStream();
     const chat = new ChatOpenAI({
       streaming: true,
@@ -55,22 +57,42 @@ export class ConversationService {
       llm: chat,
     });
 
-    chain
+    const res = chain
       .call({
         input: message,
       })
       // eslint-disable-next-line no-console
       .catch(console.error);
 
-    const conversation = await this.conversationRepository.getConversationMetadata(sessionId);
-    const msg: Message = {
-      id: uuidv4(),
-      role: 'user',
-      text: message,
-    };
-
-    this.conversationRepository.addMessage(conversation, msg);
+    this.storeMessage(sessionId, message, messageId, res);
 
     return stream;
+  }
+
+  private async createAndStoreMessage(conversation: Conversation, id: string, role: 'user' | 'ai', text: string, parentId?: string): Promise<void> {
+    const message: Message = {
+      id,
+      role: role,
+      text: text,
+      parentId: parentId,
+    };
+
+    await this.conversationRepository.addMessage(conversation, message);
+  }
+
+  private async storeMessage(id: string, message: string, messageId: string, res: Promise<void | ChainValues>): Promise<void> {
+    try {
+      const conversation = await this.conversationRepository.getConversationMetadata(id);
+      const userMsgId = messageId ?? uuidv4();
+
+      await this.createAndStoreMessage(conversation, userMsgId, 'user', message);
+
+      const chainValues = await res;
+      if (chainValues) {
+        await this.createAndStoreMessage(conversation, uuidv4(), 'ai', chainValues.response, userMsgId);
+      }
+    } catch (error) {
+      logger.error('Error while storing messages', error);
+    }
   }
 }

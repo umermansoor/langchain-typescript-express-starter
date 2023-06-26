@@ -31,7 +31,7 @@ export class ConversationController {
       const sessionId = req.params.id;
       const chatRequest = req.body as ConversationDTO;
 
-      const stream = await this.chatBotService.handleNewMessage(sessionId, chatRequest.messages[0].text);
+      const stream = await this.chatBotService.handleNewMessage(sessionId, chatRequest.messages[0].text, chatRequest.messages[0].id);
 
       const { accept } = req.headers;
       if (accept.includes('text/event-stream')) {

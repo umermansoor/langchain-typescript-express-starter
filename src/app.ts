@@ -36,10 +36,10 @@ export class App {
 
   public listen() {
     this.app.listen(this.port, () => {
-      logger.info(`==========================================`);
-      logger.info(`======= ENV: ${this.env} =================`);
+      logger.info(`===========================================`);
+      logger.info(`==========  ENV: ${this.env}  =============`);
       logger.info(`CodeAhoy Chatbot 🤖 listening on port ${this.port} 🚀`);
-      logger.info(`==========================================`);
+      logger.info(`===========================================`);
     });
   }
 
